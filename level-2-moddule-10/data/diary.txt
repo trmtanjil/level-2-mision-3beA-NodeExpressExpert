@@ -1,0 +1,3 @@
+Today was an amazing day !
+i learned about node.js file system 
+can`t wait to start .
