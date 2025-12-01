@@ -62,7 +62,7 @@ function getCeategory(filename){
                     return category
         }
     }
-    return others
+    return 'others'
 }
 
 function organizeFiles(){
