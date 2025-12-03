@@ -1,7 +1,7 @@
 const fs = require("fs")
 
-//  fs.writeFileSync('../output/app.log', 'Application Started \n')
-//  console.log('file created..')
+ fs.writeFileSync('../output/app.log', 'Application Started \n')
+ console.log('file created..')
 
  const logEntry1 = `\n ${new Date().toISOString()} user lgged in \n`
 
