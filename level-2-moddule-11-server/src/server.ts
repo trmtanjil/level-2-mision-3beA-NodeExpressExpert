@@ -58,9 +58,24 @@ const server:Server = http.createServer(
             console.log(err?.message)
          }
         })
+    }
 
-
-
+    if(req.url=='/api/mod'&& req.method=='POST'){
+        let body ='';
+        req.on('data',chunk=>{
+            body +=chunk.toString();
+        }) ;
+        req.on('end',()=>{
+            try{
+                const persBody=JSON.parse(body);
+                console.log(persBody)
+                console.log('tanjil is running api user')
+                res.end(JSON.stringify(persBody))
+            }
+            catch(err:any){
+                console.log(err.message)
+            }
+        })
     }
    }
 )
