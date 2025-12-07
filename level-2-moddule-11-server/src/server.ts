@@ -3,17 +3,7 @@ import http, {IncomingMessage, Server, ServerResponse} from 'http';
 import path from 'path';
 import config from './config';
 import addRoutes, { RouteHandler, routes } from './helpers/routhandler';
-
-addRoutes("GET", "/",(req,res)=>{
-    res.writeHead(200, {'content-type':'application/json'});
-    res.end(
-        JSON.stringify({
-            message:'Hello from node js with typescript...',
-            path:req.url,
-        })
-    )
-})
-
+import "./routes"
 
 
 
@@ -46,15 +36,15 @@ const server:Server = http.createServer(
 
 
     //root route
-    if(req.url=='/' && req.method =="GET"){
-        res.writeHead(200, {'content-type':" application/json"});
-        res.end(
-            JSON.stringify({
-                message:"hello from node js with typescript...",
-                path:req.url,
-            })
-        )
-    }
+    // if(req.url=='/' && req.method =="GET"){
+    //     res.writeHead(200, {'content-type':" application/json"});
+    //     res.end(
+    //         JSON.stringify({
+    //             message:"hello from node js with typescript...",
+    //             path:req.url,
+    //         })
+    //     )
+    // }
 
     //health route
     // if(req.url =="/api" && req.method=="GET"){
