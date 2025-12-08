@@ -1,4 +1,4 @@
-import { readUser } from "../helpers/fileDb";
+import { readUser, writeUsers } from "../helpers/fileDb";
 import parseBody from "../helpers/parseBody";
 import addRoutes from "../helpers/routhandler";
 import sendJson from "../helpers/sendJson";
@@ -24,9 +24,9 @@ addRoutes("POST",'/api/user',async(req,res)=>{
     const users= readUser()
 
     const newUser= {
-        id:Date.now(),
         ...body,
     }
-    users.Push(newUser)
+    users.push(newUser)
+     writeUsers(users);
     sendJson(res,201,{succes:true,data:body})
 })

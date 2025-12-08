@@ -1,6 +1,6 @@
 import path from "path";
 import fs from 'fs'
-const filePath = path.join(process.cwd(),'../data/user.json')
+const filePath = path.join(process.cwd(),'./src/data/user.json')
 
 export function readUser(){
     const data =fs.readFileSync(filePath, 'utf-8')
