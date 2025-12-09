@@ -60,33 +60,62 @@ sendJson(res, 202, {success:true, message: `id${id} user updated `,
     data:users[index]
 })
 })
+ // --- DELETE Method Added Here ---
+// addRoutes("DELETE", "/api/user/:id", (req, res) => {
+//     const { id } = (req as any).params;
 
+//     let users = readUser(); // Use 'let' so we can reassign
 
-// addRoutes("PUT", "/api/user/:id", async (req, res) => {
-//   const { id } = (req as any).params;
-//   const body = await parseBody(req);
+//     // Find the initial length
+//     const initialLength = users.length;
 
-//   const users = readUser();
+//     // Filter out the user with the matching id
+//     users = users.filter((user: any) => user.id !== id);
 
-//   const index = users.findIndex((user: any) => user.id == id);
+//     // Check if the length changed (i.e., if a user was deleted)
+//     if (users.length === initialLength) {
+//         // No user was deleted, so the user was not found
+//         sendJson(res, 404, {
+//             success: false,
+//             message: `User with ID ${id} not found.`
+//         });
+//         return;
+//     }
 
-//   if (index === -1) {
-//     sendJson(res, 404, {
-//       success: false,
-//       message: "user not found",
+//     // Write the modified list back to the file
+//     writeUsers(users);
+
+//     // Send a 204 No Content response (common for successful DELETE) or 200/202
+//     sendJson(res, 200, {
+//         success: true,
+//         message: `User with ID ${id} deleted successfully.`
 //     });
-//   }
-
-//   users[index] = {
-//     ...users[index],
-//     ...body,
-//   };
-
-//   writeUsers(users);
-
-//   sendJson(res, 202, {
-//     success: true,
-//     message: `id ${id} user updated`,
-//     data: users[index],
-//   });
 // });
+addRoutes("DELETE", "/api/user/:id", (req, res) => {
+    const { id } = (req as any).params;
+    
+    // FIX: Convert the string 'id' to an integer using parseInt()
+    const userIdToDelete = parseInt(id); 
+
+    let users = readUser();
+    const initialLength = users.length;
+
+    // Filter out the user using the numeric ID
+    users = users.filter((user: any) => user.id !== userIdToDelete);
+
+    // Check if the length changed
+    if (users.length === initialLength) {
+        sendJson(res, 404, {
+            success: false,
+            message: `User with ID ${id} not found.`
+        });
+        return;
+    }
+
+    writeUsers(users);
+
+    sendJson(res, 200, {
+        success: true,
+        message: `User with ID ${id} deleted successfully.`
+    });
+});
