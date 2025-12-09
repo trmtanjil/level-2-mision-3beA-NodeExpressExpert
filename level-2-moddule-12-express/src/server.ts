@@ -50,9 +50,27 @@ app.get('/', (req:Request, res:Response) => {
   res.send('Hello tanjil you are next level developer!')
 })
 
-app.post("/", (req:Request, res:Response)=>{
+app.post("/users",async (req:Request, res:Response)=>{
+const {name, email}= req.body;
 
-    console.log(req.body)
+try{
+const result = await pool.query(`INSERT INTO users(name, email) VALUES($1, $2) RETURNING*`,[name, email]);
+// console.log(result.rows[0])
+res.status(201).json({
+    succes:false,
+    message:"Data inserted Succesfully",
+    data:result.rows[0]
+})
+
+// res.send({messege:"data indserted"})
+
+}catch(err:any){
+    res.status(500).json({
+        success:false,
+        massege:err.message
+    })
+}
+console.log(req.body)
 
     res.status(201).json({
         succes:true,
