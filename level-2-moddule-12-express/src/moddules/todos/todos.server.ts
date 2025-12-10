@@ -11,6 +11,12 @@ const getTodos=async()=>{
     return result;
 }
 
+
+const getsingleTodos=async( id:string)=>{
+   const result= await pool.query(`SELECT * FROM todos WHERE id = $1`,[id])
+   return result;
+}
+
 const updateTodos = async(title:string,completed:boolean,id:string)=>{
   const result=  await pool.query(
             `UPDATE todos 
@@ -23,8 +29,10 @@ const updateTodos = async(title:string,completed:boolean,id:string)=>{
 }
 
 
+
 export const todosServices={
    creatTodos,
    getTodos ,
    updateTodos,
+   getsingleTodos
 }

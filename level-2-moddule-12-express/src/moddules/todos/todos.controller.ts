@@ -39,6 +39,32 @@ const getTodos=async(req:Request, res:Response)=>{
  }
  }
 
+   const getsingleTodos=async(req:Request, res:Response)=>{
+     // console.log(req.params.id)
+     try{
+         const result = await todosServices.getsingleTodos(req.params.id!)
+ 
+         if(result.rows.length ===0){
+             res.status(404).json({
+                 success:false,
+                 message:'todos not found'
+             }) 
+         }else{
+             res.status(200).json({
+                 success:true,
+                 message:'user fetched successfully',
+                 data:result.rows[0]
+             })
+         }
+     }catch(err:any){
+         res.status(500).json({
+             success:false,
+             message:err.message,
+         })
+     }
+ }
+
+
  const updateTodos= async(req:Request, res:Response) => {
     const { title, completed } = req.body;
 
@@ -69,5 +95,7 @@ export const todosControllers={
     creatTodos,
     getTodos,
     updateTodos,
+    getsingleTodos,
+    
     
 }

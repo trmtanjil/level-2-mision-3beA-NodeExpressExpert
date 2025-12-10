@@ -9,6 +9,8 @@ const router = express.Router();
 router.post('/',todosControllers.creatTodos)
 
 router.get('/',todosControllers.getTodos)
+ router.get('/:id',todosControllers.getsingleTodos)
+
 
 router.put("/:id", logger,todosControllers.updateTodos);
 
