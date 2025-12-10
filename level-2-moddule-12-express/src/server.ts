@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, request, Request, Response } from "express";
 import {Pool, Result}from "pg"
 import dotenv from "dotenv"
 import path from "path"
@@ -45,8 +45,13 @@ const initDB = async()=>{
 };
 initDB()
 
+const logger = (req:Request, res:Response, next:NextFunction)=>{
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}\n`);
+    next()
+}
 
-app.get('/', (req:Request, res:Response) => {
+
+app.get('/',logger, (req:Request, res:Response) => {
   res.send('Hello tanjil you are next level developer!')
 })
 
@@ -189,9 +194,29 @@ app.post('/todos',async(req:Request, res:Response)=>{
 
 })
 
+app.get('/todos',async(req:Request, res:Response)=>{
+ const result = await pool.query(`SELECT * FROM todos `)
+ try{
+    res.status(200).json({
+        success:true,
+        message:'todos get succesfully',
+        data:result.rows
+    })
+ }catch(err:any){
+    res.status(500).json({
+        success:false,
+         message:err.message,
+    })
+ }
+ })
 
-
-
+app.use((req:Request, res:Response)=>{
+    res.status(404).json({
+        success:false,
+        message:'route not found',
+        path:req.path,
+    })
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
