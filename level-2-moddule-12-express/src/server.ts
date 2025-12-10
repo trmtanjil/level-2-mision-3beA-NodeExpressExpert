@@ -2,6 +2,7 @@ import express, { NextFunction, request, Request, Response } from "express";
 import {Pool, Result}from "pg"
 import dotenv from "dotenv"
 import path from "path"
+import { userInfo } from "os";
 dotenv.config({path: path.join(process.cwd(), ".env")})
 
 const app = express();
@@ -210,6 +211,43 @@ app.get('/todos',async(req:Request, res:Response)=>{
  }
  })
 
+
+//updater todos
+app.put("/todos/:id", logger, async(req:Request, res:Response) => {
+    const { title, completed } = req.body;
+
+    try {
+        const result = await pool.query(
+            `UPDATE todos 
+             SET title = $1, completed = $2, updated_at = NOW()
+             WHERE id = $3
+             RETURNING *`,
+            [title, completed, req.params.id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'todo not found'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'todo updated successfully',
+            data: result.rows[0]
+        });
+
+    } catch (err:any) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+});
+// todo delete 
+
+
 app.use((req:Request, res:Response)=>{
     res.status(404).json({
         success:false,
@@ -217,6 +255,7 @@ app.use((req:Request, res:Response)=>{
         path:req.path,
     })
 })
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
