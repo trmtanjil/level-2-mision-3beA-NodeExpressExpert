@@ -28,11 +28,16 @@ const updateTodos = async(title:string,completed:boolean,id:string)=>{
         return result
 }
 
+const deleteTodos = async(id:string)=>{
+   const result= await pool.query(`DELETE FROM todos WHERE id = $1`,[ id])
+   return result
+}
 
 
 export const todosServices={
    creatTodos,
    getTodos ,
    updateTodos,
-   getsingleTodos
+   getsingleTodos,
+   deleteTodos
 }

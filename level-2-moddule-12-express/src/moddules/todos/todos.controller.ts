@@ -91,11 +91,38 @@ const getTodos=async(req:Request, res:Response)=>{
         });
     }
 }
+
+const deleteTodos =  async(req:Request, res:Response)=>{
+    // console.log(req.params.id)
+    const { id } = req.params;
+    try{
+        const result = await todosServices.deleteTodos(id!)
+
+        if(result.rowCount ==0){
+            res.status(404).json({
+                success:false,
+                message:'todos not found'
+            }) 
+        }else{
+            res.status(200).json({
+                success:true,
+                message:'todos delete successfully',
+                data:result.rows
+            })
+        }
+    }catch(err:any){
+        res.status(500).json({
+            success:false,
+            message:err.message,
+        })
+    }
+}
+
 export const todosControllers={
     creatTodos,
     getTodos,
     updateTodos,
     getsingleTodos,
-    
-    
+
+    deleteTodos
 }

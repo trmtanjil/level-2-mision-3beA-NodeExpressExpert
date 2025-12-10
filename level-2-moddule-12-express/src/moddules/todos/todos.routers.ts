@@ -14,4 +14,7 @@ router.get('/',todosControllers.getTodos)
 
 router.put("/:id", logger,todosControllers.updateTodos);
 
+
+router.delete("/:id", todosControllers.deleteTodos)
+
 export const todosRouter = router
