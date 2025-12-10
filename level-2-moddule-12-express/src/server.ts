@@ -4,6 +4,8 @@ import {Pool, Result}from "pg"
 import { userInfo } from "os";
 import config from "./config";
 import initDB, { pool } from "./config/db";
+import logger from "./midleware/loger";
+import { userRouter } from "./moddules/users/user.routes";
 
 
 const app = express();
@@ -13,13 +15,9 @@ const port = config.port;
 app.use(express.json());
 // app.use(express.urlencoded());
 
-//db
+//initializing db
 initDB()
 
-const logger = (req:Request, res:Response, next:NextFunction)=>{
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}\n`);
-    next()
-}
 
 
 app.get('/',logger, (req:Request, res:Response) => {
@@ -28,69 +26,37 @@ app.get('/',logger, (req:Request, res:Response) => {
 
 //users CRUD
 
-app.post("/users",async (req:Request, res:Response)=>{
-const {name, email}= req.body;
+app.use('/users',userRouter)
+// get user
 
-try{
-const result = await pool.query(`INSERT INTO users(name, email) VALUES($1, $2) RETURNING*`,[name, email]);
-// console.log(result.rows[0])
-res.status(201).json({
-    succes:false,
-    message:"Data inserted Succesfully",
-    data:result.rows[0]
-})
 
-// res.send({messege:"data indserted"})
 
-}catch(err:any){
-    res.status(500).json({
-        success:false,
-        message: err.message
-    })
-}
-console.log(req.body)
-})
-app.get("/users",async(req:Request, res:Response)=>{
-try{
-const result = await pool.query(`SELECT * FROM users`);
+// app.get("/users/:id", async(req:Request, res:Response)=>{
+//     // console.log(req.params.id)
+//     try{
+//         const result = await pool.query(`SELECT * FROM users WHERE id = $1`,[req.params.id])
 
-res.status(200).json({
-    success:true,
-    message:"users retrived succesfully",
-    data:result.rows,
-})
-}catch(err:any){
-    res.status(5000).json({
-        success:false,
-        message:err.message,
-        details:err
-    })
-}
-})
-app.get("/users/:id", async(req:Request, res:Response)=>{
-    // console.log(req.params.id)
-    try{
-        const result = await pool.query(`SELECT * FROM users WHERE id = $1`,[req.params.id])
+//         if(result.rows.length ===0){
+//             res.status(404).json({
+//                 success:false,
+//                 message:'user not found'
+//             }) 
+//         }else{
+//             res.status(200).json({
+//                 success:true,
+//                 message:'user fetched successfully',
+//                 data:result.rows[0]
+//             })
+//         }
+//     }catch(err:any){
+//         res.status(500).json({
+//             success:false,
+//             message:err.message,
+//         })
+//     }
+// })
 
-        if(result.rows.length ===0){
-            res.status(404).json({
-                success:false,
-                message:'user not found'
-            }) 
-        }else{
-            res.status(200).json({
-                success:true,
-                message:'user fetched successfully',
-                data:result.rows[0]
-            })
-        }
-    }catch(err:any){
-        res.status(500).json({
-            success:false,
-            message:err.message,
-        })
-    }
-})
+
 //updater user
 app.put("/users/:id", async(req:Request, res:Response)=>{
     // console.log(req.params.id)
