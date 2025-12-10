@@ -6,6 +6,7 @@ import config from "./config";
 import initDB, { pool } from "./config/db";
 import logger from "./midleware/loger";
 import { userRouter } from "./moddules/users/user.routes";
+import { todosRouter } from "./moddules/todos/todos.routers";
 
 
 const app = express();
@@ -29,78 +30,14 @@ app.get('/',logger, (req:Request, res:Response) => {
 app.use('/users',userRouter)
  
  
+app.use('/todos',todosRouter)
 
 //todos operation
-
-app.post('/todos',async(req:Request, res:Response)=>{
-    const {user_id, title}=req.body;
-    try{
-        const result = await pool.query(`INSERT INTO todos (user_id, title) VALUES ($1 , $2) RETURNING *`,[user_id,title])
-        res.status(200).json({
-            success:true,
-            message:'todos post successfully',
-            data:result.rows[0]
-        })
-    }catch(err:any){
-        res.status(500).json({
-            success:false,
-            message:err.message
-            
-        })
-    }
-
-})
-
-app.get('/todos',async(req:Request, res:Response)=>{
- const result = await pool.query(`SELECT * FROM todos `)
- try{
-    res.status(200).json({
-        success:true,
-        message:'todos get succesfully',
-        data:result.rows
-    })
- }catch(err:any){
-    res.status(500).json({
-        success:false,
-         message:err.message,
-    })
- }
- })
+ 
 
 
-//updater todos
-app.put("/todos/:id", logger, async(req:Request, res:Response) => {
-    const { title, completed } = req.body;
 
-    try {
-        const result = await pool.query(
-            `UPDATE todos 
-             SET title = $1, completed = $2, updated_at = NOW()
-             WHERE id = $3
-             RETURNING *`,
-            [title, completed, req.params.id]
-        );
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'todo not found'
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: 'todo updated successfully',
-            data: result.rows[0]
-        });
-
-    } catch (err:any) {
-        res.status(500).json({
-            success: false,
-            message: err.message
-        });
-    }
-});
+ 
 // todos delete 
 app.delete("/todos/:id", async(req:Request, res:Response)=>{
     // console.log(req.params.id)

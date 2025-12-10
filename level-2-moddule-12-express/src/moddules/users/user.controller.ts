@@ -8,8 +8,8 @@ const {name, email}= req.body;
 try{
  const result =await userServices.creatUser(name,email)
 // console.log(result.rows[0])
-res.status(201).json({
-    succes:false,
+res.status(200).json({
+    succes:true,
     message:"Data inserted Succesfully",
     data: result.rows[0]
 })

@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express"
-import { pool } from "../../config/db";
-import { userControllers } from "./user.controller";
+ import { userControllers } from "./user.controller";
 
 const router =express.Router();
 
