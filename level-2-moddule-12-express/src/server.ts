@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import {Pool}from "pg"
+import {Pool, Result}from "pg"
 import dotenv from "dotenv"
 import path from "path"
 dotenv.config({path: path.join(process.cwd(), ".env")})
@@ -148,7 +148,7 @@ app.delete("/users/:id", async(req:Request, res:Response)=>{
     try{
         const result = await pool.query(`DELETE FROM users WHERE id = $1`,[ req.params.id])
 
-        if(result.rows.length ===0){
+        if(result.rowCount ==0){
             res.status(404).json({
                 success:false,
                 message:'user not found'
@@ -157,7 +157,7 @@ app.delete("/users/:id", async(req:Request, res:Response)=>{
             res.status(200).json({
                 success:true,
                 message:'user delete successfully',
-                data:null
+                data:result.rows
             })
         }
     }catch(err:any){
@@ -167,6 +167,32 @@ app.delete("/users/:id", async(req:Request, res:Response)=>{
         })
     }
 })
+
+//todos operation
+
+app.post('/todos',async(req:Request, res:Response)=>{
+    const {user_id, title}=req.body;
+    try{
+        const result = await pool.query(`INSERT INTO todos (user_id, title) VALUES ($1 , $2) RETURNING *`,[user_id,title])
+        res.status(200).json({
+            success:true,
+            message:'todos post successfully',
+            data:result.rows[0]
+        })
+    }catch(err:any){
+        res.status(500).json({
+            success:false,
+            message:err.message
+            
+        })
+    }
+
+})
+
+
+
+
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
