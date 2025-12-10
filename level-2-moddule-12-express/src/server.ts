@@ -27,88 +27,8 @@ app.get('/',logger, (req:Request, res:Response) => {
 //users CRUD
 
 app.use('/users',userRouter)
-// get user
-
-
-
-// app.get("/users/:id", async(req:Request, res:Response)=>{
-//     // console.log(req.params.id)
-//     try{
-//         const result = await pool.query(`SELECT * FROM users WHERE id = $1`,[req.params.id])
-
-//         if(result.rows.length ===0){
-//             res.status(404).json({
-//                 success:false,
-//                 message:'user not found'
-//             }) 
-//         }else{
-//             res.status(200).json({
-//                 success:true,
-//                 message:'user fetched successfully',
-//                 data:result.rows[0]
-//             })
-//         }
-//     }catch(err:any){
-//         res.status(500).json({
-//             success:false,
-//             message:err.message,
-//         })
-//     }
-// })
-
-
-//updater user
-app.put("/users/:id", async(req:Request, res:Response)=>{
-    // console.log(req.params.id)
-    const {name, email}= req.body;
-    try{
-        const result = await pool.query(`UPDATE users SET name=$1, email=$2 WHERE id=$3 RETURNING *`,[name, email, req.params.id])
-
-        if(result.rows.length ===0){
-            res.status(404).json({
-                success:false,
-                message:'user not found'
-            }) 
-        }else{
-            res.status(200).json({
-                success:true,
-                message:'user updated successfully',
-                data:result.rows[0]
-            })
-        }
-    }catch(err:any){
-        res.status(500).json({
-            success:false,
-            message:err.message,
-        })
-    }
-})
-//delet user method
-app.delete("/users/:id", async(req:Request, res:Response)=>{
-    // console.log(req.params.id)
  
-    try{
-        const result = await pool.query(`DELETE FROM users WHERE id = $1`,[ req.params.id])
-
-        if(result.rowCount ==0){
-            res.status(404).json({
-                success:false,
-                message:'user not found'
-            }) 
-        }else{
-            res.status(200).json({
-                success:true,
-                message:'user delete successfully',
-                data:result.rows
-            })
-        }
-    }catch(err:any){
-        res.status(500).json({
-            success:false,
-            message:err.message,
-        })
-    }
-})
+ 
 
 //todos operation
 
