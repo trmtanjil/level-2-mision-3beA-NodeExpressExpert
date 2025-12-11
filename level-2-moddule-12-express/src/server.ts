@@ -7,6 +7,7 @@ import initDB, { pool } from "./config/db";
 import logger from "./midleware/loger";
 import { userRouter } from "./moddules/users/user.routes";
 import { todosRouter } from "./moddules/todos/todos.routers";
+import { authRoutes } from "./moddules/auth/auth.routes";
 
 
 const app = express();
@@ -14,8 +15,7 @@ const port = config.port;
 
 //parser
 app.use(express.json());
-// app.use(express.urlencoded());
-
+ 
 //initializing db
 initDB()
 
@@ -30,9 +30,11 @@ app.get('/',logger, (req:Request, res:Response) => {
 app.use('/users',userRouter)
  
  
+//todos operation
 app.use('/todos',todosRouter)
 
-//todos operation
+//auth operation
+app.use('/auth',authRoutes)
  
 
 
