@@ -94,10 +94,10 @@ const updateUser =  async(req:Request, res:Response)=>{
      }
  }
  // user delete
- const delteUser =async(req:Request, res:Response)=>{
-   
+ const delteUser =async(req:Request, res:Response,)=>{
+   const {id}=req.params
      try{
-         const result = await pool.query(`DELETE FROM users WHERE id = $1`,[ req.params.id])
+         const result = await userServices.userDelet(id!)
  
          if(result.rowCount ==0){
              res.status(404).json({
